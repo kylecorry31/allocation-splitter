@@ -30,6 +30,30 @@ h3 {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+.form-group select {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    min-height: 38px;
+}
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.form-group select[multiple] {
+    height: auto;
+    min-height: 100px;
+    padding: 0;
+}
+.form-group select[multiple] option {
+    padding: 0.5rem;
+}
+.form-group select[multiple] option:hover {
+    background-color: #f0f0f0;
+}
 button {
     padding: 0.5rem 1rem;
     border: none;

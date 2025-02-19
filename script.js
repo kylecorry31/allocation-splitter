@@ -152,6 +152,16 @@ function updateAssignments() {
     document.getElementById("work-items").appendChild(workItemElement);
   });
 
+  // Update the assignee dropdown options
+  const workAssignedSelect = document.getElementById("work-assigned");
+  workAssignedSelect.innerHTML = "";
+  people.forEach((person) => {
+    const option = document.createElement("option");
+    option.value = person.name;
+    option.textContent = person.name;
+    workAssignedSelect.appendChild(option);
+  });
+
   // Save current data to local storage (including sprint days)
   saveData();
 }
@@ -171,7 +181,9 @@ function addPerson() {
 function addWorkItem() {
   const description = document.getElementById("work-name").value.trim();
   const days = parseInt(document.getElementById("work-days").value);
-  let assignTo = document.getElementById("work-assigned").value.trim();
+  let assignTo = [...document.getElementById("work-assigned").selectedOptions]
+    .map((it) => it.value)
+    .join(",");
   if (!description || isNaN(days)) return;
 
   if (assignTo === "") {
