@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Allocation Splitter with Optimized Greedy & Storage</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <h1>Allocation Splitter</h1>
+
+        <!-- Sprint settings -->
+        <div class="container" id="sprint-settings">
+            <div class="form-group">
+                <label for="sprint-days">Days per Sprint:</label>
+                <input
+                    type="number"
+                    id="sprint-days"
+                    placeholder="Enter days per sprint"
+                />
+                <button id="clear-all" onclick="clearAll()">Clear All</button>
+            </div>
+        </div>
+
+        <!-- People Section -->
+        <div class="container" id="people-section">
+            <h2>Add Person</h2>
+            <div class="form-group">
+                <input
+                    type="text"
+                    id="person-name"
+                    placeholder="Enter person name"
+                />
+                <input
+                    type="number"
+                    id="person-days"
+                    placeholder="Enter person allocation"
+                />
+            </div>
+            <button id="add-person" onclick="addPerson()">Add Person</button>
+            <div id="allocations" class="list-section"></div>
+            <div id="unallocated" class="list-section">
+                <h3>Unallocated Work Items</h3>
+                <ul id="unallocated-list"></ul>
+            </div>
+        </div>
+
+        <!-- Work Items Section -->
+        <div class="container" id="work-items-section">
+            <h2>Add Work Item</h2>
+            <div class="form-group">
+                <input
+                    type="text"
+                    id="work-name"
+                    placeholder="Enter work item name"
+                />
+                <input
+                    type="number"
+                    id="work-days"
+                    placeholder="Enter work item days"
+                />
+            </div>
+            <button id="add-work" onclick="addWorkItem()">Add Work Item</button>
+            <div id="work-items" class="list-section"></div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
