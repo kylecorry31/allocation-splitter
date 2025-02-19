@@ -1,8 +1,6 @@
-// Global arrays for people and work items
 const people = [];
 const workItems = [];
 
-// Utility: Returns a random hex color
 function getRandomColor() {
   return (
     "#" +
@@ -10,6 +8,14 @@ function getRandomColor() {
       .toString(16)
       .padStart(6, "0")
   );
+}
+
+function getMostContrastingColor(hexcolor) {
+  const r = parseInt(hexcolor.slice(1, 3), 16);
+  const g = parseInt(hexcolor.slice(3, 5), 16);
+  const b = parseInt(hexcolor.slice(5, 7), 16);
+  const valueIndex = (r * 299 + g * 587 + b * 114) / 1000;
+  return valueIndex >= 128 ? "black" : "white";
 }
 
 function assignWorkItems(people, sprintDays, workItems) {
@@ -104,6 +110,7 @@ function updateAssignments() {
       const taskBlock = document.createElement("div");
       taskBlock.classList.add("task-block");
       taskBlock.style.backgroundColor = task.color;
+      taskBlock.style.color = getMostContrastingColor(task.color);
       const widthPercentage = (task.days / capacity) * 100;
       taskBlock.style.width = widthPercentage + "%";
       taskBlock.title = `${task.description} (${task.days} days)`;
