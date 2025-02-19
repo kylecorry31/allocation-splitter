@@ -25,14 +25,29 @@ function assignWorkItems(people, sprintDays, workItems) {
   });
 
   // Sort tasks by descending order (largest first)
-  let tasksSorted = [...workItems].sort((a, b) => b.days - a.days);
+  let tasksSorted = [...workItems].sort((a, b) => {
+    // Sort assigned tasks first
+    if (a.assignTo && !b.assignTo) return -1;
+    if (!a.assignTo && b.assignTo) return 1;
+    // Then sort by days
+    return b.days - a.days;
+  });
   let unallocated = [];
 
   tasksSorted.forEach((task) => {
+    // Determine valid assignees if assignTo is provided
+    let validAssignees = null;
+    if (task.assignTo != null && task.assignTo !== "") {
+      validAssignees = task.assignTo.split(",").map((s) => s.trim());
+    }
     // Sort assignments by freeCapacity descending
     assignments.sort((a, b) => b.freeCapacity - a.freeCapacity);
     let assigned = false;
     for (let assign of assignments) {
+      // If task.assignTo is set, only assign if current person is in that list
+      if (validAssignees && !validAssignees.includes(assign.person)) {
+        continue;
+      }
       if (assign.freeCapacity >= task.days) {
         assign.tasks.push(task);
         assign.freeCapacity -= task.days;
@@ -112,7 +127,9 @@ function updateAssignments() {
   unallocated.forEach((task) => {
     const li = document.createElement("li");
     li.style.color = task.color;
-    li.textContent = `${task.description} (${task.days} days)`;
+    li.textContent =
+      `${task.description} (${task.days} days)` +
+      (task.assignTo ? ` [Assigned to: ${task.assignTo}]` : "");
     document.getElementById("unallocated-list").appendChild(li);
   });
 
@@ -120,7 +137,10 @@ function updateAssignments() {
   workItems.forEach((workItem) => {
     const workItemElement = document.createElement("div");
     workItemElement.classList.add("work-item");
-    workItemElement.innerHTML = `<span><strong>${workItem.description}</strong> (${workItem.days} days)</span>
+    workItemElement.innerHTML =
+      `<span><strong>${workItem.description}</strong> (${workItem.days} days)` +
+      (workItem.assignTo ? ` [Assigned to: ${workItem.assignTo}]` : "") +
+      `</span>
 <button class="remove-btn" onclick="removeWorkItem('${workItem.description}')">X</button>`;
     document.getElementById("work-items").appendChild(workItemElement);
   });
@@ -144,11 +164,18 @@ function addPerson() {
 function addWorkItem() {
   const description = document.getElementById("work-name").value.trim();
   const days = parseInt(document.getElementById("work-days").value);
+  let assignTo = document.getElementById("work-assigned").value.trim();
   if (!description || isNaN(days)) return;
+
+  if (assignTo === "") {
+    assignTo = null;
+  }
+
   // Clear input fields
   document.getElementById("work-name").value = "";
   document.getElementById("work-days").value = "";
-  const workItem = { description, days, color: getRandomColor() };
+  document.getElementById("work-assigned").value = "";
+  const workItem = { description, days, color: getRandomColor(), assignTo };
   workItems.push(workItem);
   updateAssignments();
 }
@@ -179,6 +206,7 @@ function clearAll() {
   document.getElementById("work-name").value = "";
   document.getElementById("work-days").value = "";
   document.getElementById("sprint-days").value = "";
+  document.getElementById("work-assigned").value = "";
   updateAssignments();
   localStorage.removeItem("people");
   localStorage.removeItem("workItems");
